@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    
+    @State var artistPortfolioOpen: Bool = false
     
     var body: some View {
         ZStack {
@@ -33,6 +33,18 @@ struct ContentView: View {
                         }
                         Experience()
                         Projects().foregroundColor(.black)
+                        VStack {
+                            Button(action: {
+                                artistPortfolioOpen.toggle()
+                            }) {
+                                Label("Artist Portfolio", systemImage: "person.crop.square")
+                            }
+                            .buttonStyle(PressableCapsuleStyle())
+                            if artistPortfolioOpen {
+                                ArtistPortfolioView()
+                            }
+                        }
+                        
                         Spacer()
                     })
                 }
@@ -68,6 +80,10 @@ struct Header: View {
                  Link(destination: URL(string: "https://github.com/labatemarco")!) {
                      Image("github-mark").resizable().frame(width: 35.27, height: 30)
                  }
+                 Link(destination: URL(string: "https://www.cue2live.com")!) {
+                     Image("cue2liveicon").resizable().frame(width: 35.27, height: 30)
+                 }
+                 
             }
     }
 }
@@ -201,13 +217,34 @@ struct projectCell: View {
                 Text("Development Time: ")
                 Text(length)
             }.padding([.bottom], 10)
+            
+            WrapHStack(skills)
         }
         .padding(8)
-        .overlay(
+        .background(
             RoundedRectangle(cornerRadius: 5)
                 .stroke(.black, lineWidth: 1)
+                .fill(Color.black.opacity(0.1))
                 .padding(2)
         )
+    }
+}
+
+
+struct WrapHStack: View {
+    let skills: [String]
+    init(_ skills: [String]) { self.skills = skills }
+    var body: some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 6)], spacing: 6) {
+            ForEach(skills, id: \.self) { skill in
+                Text(skill)
+                    .font(.caption2)
+                    .padding(6)
+                    .background(Color.blue.opacity(0.2))
+                    .foregroundColor(.blue)
+                    .cornerRadius(6)
+            }
+        }
     }
 }
 
@@ -261,12 +298,12 @@ struct Projects: View {
         "Cue2Live": [
             "Description": "Setlist App for Ableton Live, with a server written in Ableton's built in python implementation, and a frontend GUI written in Swift. Allows for show control of Ableton Live sessions not natively available.",
             "Time to Completion": "4 months", // Change to actual time interval type
-            "Skills Used": ["Python", "Swift", "Appkit", "Networking"]
+            "Skills Used": ["Python", "Swift", "Appkit", "Networking", "Core MIDI"]
         ],
         "Cue2Live-iOS": [
             "Description": "Mobile companion app client for Cue2Live MacOS. Allows show control from an iPad or iPhone.",
-            "Time to Completion": "WIP",
-            "Skills Used": ["Swift", "SwiftUI","Network.Foundation", "Networking"]
+            "Time to Completion": "6 months",
+            "Skills Used": ["Swift", "SwiftUI","Network.Foundation", "Networking", "Core MIDI"]
         ],
         "Cue2Live Website": [
             "Description": "Website to host Cue2Live family of software.",
@@ -284,6 +321,135 @@ struct Projects: View {
                     projectCell(key: key, description: description ?? "", length: length ?? "", skills: skills ?? [])
                 }
             }.padding([.top, .bottom], 5)
+        }
+    }
+}
+
+struct ArtistPortfolioView: View {
+    @State var selection = 0
+    
+    var body: some View {
+        VStack {
+            VStack {
+                HStack {
+                    Button("Addison Rae") { selection = 1 }
+                        .buttonStyle(SmallPressableCapsuleStyle())
+                    Button("The Kills") { selection = 2 }
+                        .buttonStyle(SmallPressableCapsuleStyle())
+                    Button("Anderson Paak") { selection = 3 }
+                        .buttonStyle(SmallPressableCapsuleStyle())
+                    Button("Zara Larsson") { selection = 4 }
+                        .buttonStyle(SmallPressableCapsuleStyle())
+                }
+                HStack {
+                    Button("Blxst") { selection = 5 }
+                        .buttonStyle(SmallPressableCapsuleStyle())
+                    Button("Latto") { selection = 6 }
+                        .buttonStyle(SmallPressableCapsuleStyle())
+                    Button("Victoria Monet") { selection = 7 }
+                        .buttonStyle(SmallPressableCapsuleStyle())
+                    Button("PinkPantheress") { selection = 8 }
+                        .buttonStyle(SmallPressableCapsuleStyle())
+                }
+            }
+            .padding()
+                    
+            Divider()
+            
+            // Content area
+            Group {
+                switch selection {
+                case 1:
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Addison Tour 2025")
+                            .font(.headline)
+                        Text("Playback Engineer and Programmer")
+                            .font(.subheadline)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                case 2:
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("God Games Tour 2024-25")
+                            .font(.headline)
+                        Text("Queens of the Stone Age")
+                            .font(.headline)
+                        Text("Nero Tour Support 2025")
+                            .font(.headline)
+                        Text("Playback Engineer and Programmer")
+                            .font(.subheadline)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                case 3:
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Malibu Tour 2024")
+                            .font(.headline)
+                        Text("Ableton Programmer")
+                            .font(.subheadline)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    
+                case 4:
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("One-Off: Z100 Jumpstart to Summer")
+                            .font(.headline)
+                        Text("Playback Tech")
+                            .font(.subheadline)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    
+                case 5:
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("I'll Always Come Find You Tour 2024")
+                            .font(.headline)
+                        Text("Ableton Programmer")
+                            .font(.subheadline)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                case 6:
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Multiple One-offs 2024")
+                            .font(.headline)
+                        Text("Playback Engineer, Programmer, Mixer")
+                            .font(.subheadline)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                case 7:
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Jaguar Tour 2023")
+                            .font(.headline)
+                        Text("Tonight Show w/ Jimmy Fallon 2023")
+                            .font(.headline)
+                        Text("Playback Engineer")
+                            .font(.subheadline)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                case 8:
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Primavera Sound 2023")
+                            .font(.headline)
+                        Text("Gov Ball NYC 2023")
+                            .font(.headline)
+                        Text("Playback Engineer and Programmer")
+                            .font(.subheadline)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                default:
+                    EmptyView()
+                }
+            }
+            .foregroundColor(.white)
+            .frame(width: 200, height: 200)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.black) // fill under your text
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.white, lineWidth: 1) // border line
+                    )
+                )
         }
     }
 }
