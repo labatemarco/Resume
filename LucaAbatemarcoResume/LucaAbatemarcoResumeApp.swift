@@ -12,6 +12,7 @@ struct LucaAbatemarcoResumeApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-        }
+                .frame(width: 400, height: 500)
+        }.windowResizability(.contentSize)
     }
 }
