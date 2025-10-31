@@ -81,3 +81,21 @@ struct projectCell: View {
         )
     }
 }
+
+
+struct WrapHStack: View {
+    let skills: [String]
+    init(_ skills: [String]) { self.skills = skills }
+    var body: some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 6)], spacing: 6) {
+            ForEach(skills, id: \.self) { skill in
+                Text(skill)
+                    .font(.caption2)
+                    .padding(6)
+                    .background(Color.blue.opacity(0.2))
+                    .foregroundColor(.blue)
+                    .cornerRadius(6)
+            }
+        }
+    }
+}

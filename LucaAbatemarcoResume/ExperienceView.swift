@@ -7,82 +7,14 @@
 
 import SwiftUI
 
+
 struct Experience: View {
-    var experienceDates: [String: [String: Date?]] = [
-    "Microfabrica": ["start": Calendar.current.date(from: DateComponents(year: 2020, month: 7)), "end":  Calendar.current.date(from: DateComponents(year: 2022, month: 3))],
-    "Effigy Music LLC": ["start": Calendar.current.date(from: DateComponents(year: 2022, month: 3)), "end": Date()]
-    ]
-    var experienceRole: [String: String] = [
-        "Microfabrica": "Jr. Process Engineer",
-        "Effigy Music LLC": "Owner/Playback Engineer"
-    ]
     
     var body: some View {
         DisclosureGroup("Experience") {
-                LazyVStack {
-                    ForEach(Array(experienceDates), id: \.key) { key, value in
-                        let position = experienceRole[key] ?? nil
-                        ExperienceCell(key: key, position: position ?? "", start: value["start"] ?? nil,
-                                       end: value["end"] ?? nil)
-                    }
-                }
-        }.foregroundColor(.cyan)
-    }
-}
-
-
-
-struct ExperienceCell: View {
-    @State var contentExpanded: Bool = false
-    let key: String
-    let position: String
-    let start: Date?
-    let end: Date?
-    var formattedInterval: String {
-        guard let start = start, let end = end else { return "" }
-        
-        let formatter = DateIntervalFormatter()
-        formatter.dateStyle = .medium // or .long
-        formatter.timeStyle = .none
-        return formatter.string(from: start, to: end)
-    }
-    
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(.blue, lineWidth: 2)
-                .padding([.top, .bottom], 1)
-                .background(.ultraThinMaterial)
-                .allowsHitTesting(false)
-                .frame(width: contentExpanded ? 365 : 200)
-            VStack {
-                Text(key)
-                    .frame(height: 20)
-                    .padding([.top, .leading, .trailing], 4)
-                Text(position)
-                    .font(.system(size: 12))
-                if start != nil && end != nil {
-                    Text(formattedInterval)
-                        .padding([.bottom, .leading, .trailing], 4)
-                }
-                if contentExpanded {
-                    ExperienceContent(experience: key)
-                }
-                
-                Button("Details", action: {
-                    contentExpanded.toggle()
-                })
-                .padding(5)
-                .font(.system(size: 10))
-                .foregroundColor(.black)
-                .background(Color.blue)
-                .background(in: .capsule, fillStyle: .init(eoFill: true, antialiased: true))
-                .buttonBorderShape(.capsule)
-                .buttonStyle(.borderless)
-            }
-            .padding([.bottom], 5)
+            ExperienceTimeline()
         }
-            
+        .foregroundColor(.cyan)
     }
 }
 
@@ -91,42 +23,173 @@ struct ExperienceContent: View {
     let experienceContent: [String: [String: Any]] = [
         "Microfabrica": [
             "header": "Sustaining engineer for mature HVM wafer-based process to develop high aspect ratio MEMS components and medical devices in ISO 9001 and ISO 13485 environment.",
-            "content": ["Sustained production for high volume MEMS manufacturing process across Photolithography, Electroplating, and Planarization modules",
-                        "Defect tracker owner; focus on metrology for alignment and critical dimension.",
-                        "Led technology transfer area to international parent company twice; once as owner of inspection, and once as owner of sputtering for special research team",
-                        "Team member for product development and technology transfer of thermal management product into high volume manufacturing."]
+            "content": [
+                "Sustained production for high volume MEMS manufacturing process across Photolithography, Electroplating, and Planarization modules.",
+                "Defect tracker owner; focus on metrology for alignment and critical dimension.",
+                "Led technology transfer to international parent company twice — once as inspection owner, once as sputtering owner for research team.",
+                "Team member for product development and technology transfer of thermal management product into HVM."
+            ]
         ],
         "Effigy Music LLC": [
-            "header": "Build show rigs and program live shows for A list artists,  taking them on tour to support systems and programming:",
+            "header": "Build show rigs and program live shows for A-list artists, taking them on tour to support systems and programming:",
             "content": [
-                "Worked with numerous grammy-winning and nominated artists such as: Victoria Monet, Dominic Fike, Ari Lennox, Swae Lee, Cordae, Pinkpantheress, Arlo Parks, and others doing everything from arena shows to Jimmy Fallon.",
-                "Engineer/document custom playback and MIDI rigs, as well as program them; a combination of technical rigor and creative awareness.",
-                "Currently coding a custom Ableton Live extension with a python backend, and Swift frontend."
+                "Worked with numerous Grammy-winning and nominated artists such as Victoria Monét, Dominic Fike, Ari Lennox, Swae Lee, Cordae, PinkPantheress, Arlo Parks, and others.",
+                "Engineered and documented custom playback and MIDI rigs; combination of technical rigor and creative awareness.",
+                "Currently coding a custom Ableton Live extension with a Python backend and Swift frontend."
             ]
         ]
     ]
+    
     var experience: String
     
-    
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
             if let header = experienceContent[experience]?["header"] as? String {
                 Text(header)
-                    .padding(2)
                     .font(.system(size: 12))
+                    .foregroundColor(.primary)
+                    .padding(.bottom, 4)
             }
             
             if let contentList = experienceContent[experience]?["content"] as? [String] {
-                ForEach(contentList, id: \.self) {
-                    bulletPoint in
-                    HStack(alignment: .top) {
-                        Text("•").bold().padding([.leading], 4)
-                        Text(bulletPoint)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .font(.system(size: 10))
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(contentList, id: \.self) { bulletPoint in
+                        HStack(alignment: .top, spacing: 6) {
+                            Text("•")
+                                .bold()
+                            Text(bulletPoint)
+                                .font(.system(size: 10))
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
                     }
                 }
             }
         }
+        .padding(6)
+    }
+}
+
+
+
+struct ExperienceTimeline: View {
+    var experienceDates: [String: [String: Date?]] = [
+        "Microfabrica": [
+            "start": Calendar.current.date(from: DateComponents(year: 2020, month: 7)),
+            "end": Calendar.current.date(from: DateComponents(year: 2022, month: 3))
+        ],
+        "Effigy Music LLC": [
+            "start": Calendar.current.date(from: DateComponents(year: 2022, month: 3)),
+            "end": Date()
+        ]
+    ]
+    
+    var experienceRole: [String: String] = [
+        "Microfabrica": "Jr. Process Engineer",
+        "Effigy Music LLC": "Owner / Playback Engineer"
+    ]
+    
+    var sortedExperiences: [(String, [String: Date?])] {
+        // Sort by start date descending
+        Array(experienceDates)
+            .sorted { lhs, rhs in
+                guard
+                    let lStart = lhs.value["start"] ?? nil,
+                    let rStart = rhs.value["start"] ?? nil
+                else { return false }
+                return lStart > rStart
+            }
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 24) {
+            Text("Experience")
+                .font(.title2.bold())
+                .foregroundColor(.cyan)
+                .padding(.bottom, 8)
+            
+            ForEach(Array(sortedExperiences.enumerated()), id: \.offset) { index, element in
+                let key = element.0
+                let value = element.1
+                let position = experienceRole[key] ?? ""
+                
+                TimelineEntryView(
+                    key: key,
+                    position: position,
+                    start: value["start"] ?? nil,
+                    end: value["end"] ?? nil,
+                    isLast: index == sortedExperiences.count - 1
+                )
+            }
+        }
+        .padding()
+    }
+}
+
+struct TimelineEntryView: View {
+    @State private var expanded = false
+    let key: String
+    let position: String
+    let start: Date?
+    let end: Date?
+    let isLast: Bool
+    
+    var formattedInterval: String {
+        guard let start = start, let end = end else { return "" }
+        let formatter = DateIntervalFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter.string(from: start, to: end)
+    }
+    
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            VStack {
+                Circle()
+                    .fill(expanded ? .cyan : .gray.opacity(0.5))
+                    .frame(width: 12, height: 12)
+                    .scaleEffect(expanded ? 1.2 : 1.0)
+                    .animation(.easeInOut(duration: 0.2), value: expanded)
+                
+                if !isLast {
+                    Rectangle()
+                        .fill(.gray.opacity(0.3))
+                        .frame(width: 2, height: 50)
+                        .padding(.top, -4)
+                }
+            }
+            
+            VStack(alignment: .leading, spacing: 6) {
+                Text(key)
+                    .font(.headline)
+                
+                Text(position)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                if start != nil && end != nil {
+                    Text(formattedInterval)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+                
+                if expanded {
+                    ExperienceContent(experience: key)
+                        .transition(.opacity.combined(with: .move(edge: .top)))
+                }
+                
+                Button(expanded ? "Hide Details" : "Details") {
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                        expanded.toggle()
+                    }
+                }
+                .font(.system(size: 11, weight: .semibold))
+                .padding(.top, 4)
+                .foregroundColor(.cyan)
+                .buttonStyle(.plain)
+            }
+            .padding(.bottom, 8)
+        }
+        .padding()
+        .background(.ultraThinMaterial)
     }
 }

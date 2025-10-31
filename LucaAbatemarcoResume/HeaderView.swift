@@ -10,7 +10,8 @@ import SwiftUI
 struct Header: View {
     
     var body: some View {
-             HStack {
+        VStack {
+            HStack {
                 VStack {
                     Text("Luca Abatemarco").font(.custom("Hiragino Sans", size: 20))
                         .foregroundColor(.cyan).padding(5).frame(height: 20)
@@ -19,14 +20,15 @@ struct Header: View {
                 Link(destination: URL(string: "https://www.linkedin.com/in/luca-abatemarco/")!) {
                     Image("LI-In-Bug").resizable().frame(width: 35.27, height: 30)
                 }
-                 Link(destination: URL(string: "https://github.com/labatemarco")!) {
-                     Image("github-mark").resizable().frame(width: 35.27, height: 30)
-                 }
-                 Link(destination: URL(string: "https://www.cue2live.com")!) {
-                     Image("cue2liveicon").resizable().frame(width: 35.27, height: 30)
-                 }
-                 
+                Link(destination: URL(string: "https://github.com/labatemarco")!) {
+                    Image("github-mark").resizable().frame(width: 35.27, height: 30)
+                }
+                Link(destination: URL(string: "https://www.cue2live.com")!) {
+                    Image("cue2liveicon").resizable().frame(width: 35.27, height: 30)
+                }
+                
             }
+        }
     }
 }
 
@@ -50,3 +52,4 @@ struct ProfessionCarousel: View {
     }
     
 }
+
