@@ -8,29 +8,39 @@
 import SwiftUI
 
 struct ArtistPortfolioView: View {
-    @State var selection = 0
+    @State var currentSelection = 0
+    
+    func selectionToggle (_ selection: Int) -> Void {
+        if currentSelection == selection {
+            withAnimation(.easeOut) {
+                currentSelection = 0
+            }
+        } else {
+            currentSelection = selection
+        }
+    }
     
     var body: some View {
         VStack {
             VStack {
                 HStack {
-                    Button("Addison Rae") { selection = 1 }
+                    Button("Addison Rae") {selectionToggle(1)}
                         .buttonStyle(SmallPressableCapsuleStyle())
-                    Button("The Kills") { selection = 2 }
+                    Button("The Kills") { selectionToggle(2) }
                         .buttonStyle(SmallPressableCapsuleStyle())
-                    Button("Anderson Paak") { selection = 3 }
+                    Button("Anderson Paak") { selectionToggle(3) }
                         .buttonStyle(SmallPressableCapsuleStyle())
-                    Button("Zara Larsson") { selection = 4 }
+                    Button("Zara Larsson") { selectionToggle(4) }
                         .buttonStyle(SmallPressableCapsuleStyle())
                 }
                 HStack {
-                    Button("Blxst") { selection = 5 }
+                    Button("Blxst") { selectionToggle(5) }
                         .buttonStyle(SmallPressableCapsuleStyle())
-                    Button("Latto") { selection = 6 }
+                    Button("Latto") { selectionToggle(6) }
                         .buttonStyle(SmallPressableCapsuleStyle())
-                    Button("Victoria Monet") { selection = 7 }
+                    Button("Victoria Monet") { selectionToggle(7) }
                         .buttonStyle(SmallPressableCapsuleStyle())
-                    Button("PinkPantheress") { selection = 8 }
+                    Button("PinkPantheress") { selectionToggle(8) }
                         .buttonStyle(SmallPressableCapsuleStyle())
                 }
             }
@@ -40,7 +50,7 @@ struct ArtistPortfolioView: View {
             
             // Content area
             Group {
-                switch selection {
+                switch currentSelection {
                 case 1:
                     HStack {
                         Spacer()
@@ -168,12 +178,13 @@ struct ArtistPortfolioView: View {
             .frame(width: 200, height: 200)
             .background(
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.black) // fill under your text
+                    .fill(Color.black) 
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.white, lineWidth: 1) // border line
+                            .stroke(Color.white, lineWidth: 1)
                     )
                 )
         }
+        .padding([.bottom], 30)
     }
 }

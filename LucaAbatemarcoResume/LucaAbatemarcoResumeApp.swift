@@ -11,7 +11,7 @@ import SwiftUI
 struct LucaAbatemarcoResumeApp: App {
     var body: some Scene {
         WindowGroup {
-            ResumeView()
+            MasterView()
                 .frame(width: 400, height: 500)
         }.windowResizability(.contentSize)
     }

@@ -9,13 +9,18 @@ import SwiftUI
 
 struct Header: View {
     
+    @ObservedObject var song: AudioVisualizer
+    
     var body: some View {
         VStack {
             HStack {
                 VStack {
                     Text("Luca Abatemarco").font(.custom("Hiragino Sans", size: 20))
                         .foregroundColor(.cyan).padding(5).frame(height: 20)
-                    ProfessionCarousel(myProfessions: ["Developer", "Audio Engineer", "Scientist"]).padding([.top], 5).frame(height: 5).baselineOffset(2)
+                    HStack {
+                        SmallAmplitudeVisualizer(visualizer: song)
+                        ProfessionCarousel(myProfessions: ["Developer", "Audio Engineer", "Scientist"]).padding([.top], 5).frame(height: 5).baselineOffset(2)
+                    }
                 }
                 Link(destination: URL(string: "https://www.linkedin.com/in/luca-abatemarco/")!) {
                     Image("LI-In-Bug").resizable().frame(width: 35.27, height: 30)

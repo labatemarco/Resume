@@ -8,35 +8,23 @@
 import SwiftUI
 
 
-struct Projects: View {
-    var projectDict: [String: [String: Any]] = [
-        "Cue2Live": [
-            "Description": "Setlist App for Ableton Live, with a server written in Ableton's built in python implementation, and a frontend GUI written in Swift. Allows for show control of Ableton Live sessions not natively available.",
-            "Time to Completion": "4 months", // Change to actual time interval type
-            "Skills Used": ["Python", "Swift", "Appkit", "Networking", "Core MIDI"]
-        ],
-        "Cue2Live-iOS": [
-            "Description": "Mobile companion app client for Cue2Live MacOS. Allows show control from an iPad or iPhone.",
-            "Time to Completion": "6 months",
-            "Skills Used": ["Swift", "SwiftUI","Network.Foundation", "Networking", "Core MIDI"]
-        ],
-        "Cue2Live Website": [
-            "Description": "Website to host Cue2Live family of software.",
-            "Time to Completion": "1 month", // Change to actual time interval type
-            "Skills Used": ["Django", "Python", "Javascript", "CSS", "HTML", "PostGreSQL", "nginx", "gunicorn", "bash"]
-        ]
-    ]
+
+struct DurationMeter: View {
+    let progress: Double
+    
+    
+    
     var body: some View {
-        DisclosureGroup("Projects") {
-            LazyVStack {
-                ForEach(Array(projectDict), id: \.key) { key , value in
-                    let description: String? = value["Description"] as? String
-                    let length: String? = value["Time to Completion"] as? String
-                    let skills: [String]? = value["Skills Used"] as? [String]
-                    projectCell(key: key, description: description ?? "", length: length ?? "", skills: skills ?? [])
-                }
-            }.padding([.top, .bottom], 5)
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                Capsule()
+                    .fill(Color.gray.opacity(0.2))
+                Capsule()
+                    .fill(Color.cyan.opacity(0.8))
+                    .frame(width: geo.size.width * progress)
+            }
         }
+        .frame(height: 8)
     }
 }
 
@@ -46,6 +34,7 @@ struct projectCell: View {
     let description: String
     let length: String
     let skills: [String]
+    let meterProgress: Double
     
     var body: some View {
         VStack {
@@ -57,18 +46,14 @@ struct projectCell: View {
                 Text(description).font(.system(size: 11))
             }
             .padding(4)
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(.blue, lineWidth: 2)
-                    .padding([.top, .bottom], 1)
-                    .background(Color.cyan.opacity(0.2))
-                    .allowsHitTesting(false)
-                
-            )
             HStack {
                 Text("Development Time: ")
                 Text(length)
             }.padding([.bottom], 10)
+            
+            DurationMeter(progress: meterProgress)
+                .frame(height: 8)
+                .padding([.top], 4)
             
             WrapHStack(skills)
         }
@@ -99,3 +84,72 @@ struct WrapHStack: View {
         }
     }
 }
+
+
+
+
+struct Projects: View {
+    
+    
+    
+    var projectDict: [String: [String: Any]] = [
+        "Cue2Live": [
+            "Description": "Setlist App for Ableton Live, with a server written in Ableton's built in python implementation, and a frontend GUI written in Swift. Allows for show control of Ableton Live sessions not natively available.",
+            "Time to Completion": "4 months", // Change to actual time interval type
+            "Skills Used": ["Python", "Swift", "Appkit", "Networking", "Core MIDI"]
+        ],
+        "Cue2Live-iOS": [
+            "Description": "Mobile companion app client for Cue2Live MacOS. Allows show control from an iPad or iPhone.",
+            "Time to Completion": "6 months",
+            "Skills Used": ["Swift", "SwiftUI","Network.Foundation", "Networking", "Core MIDI"]
+        ],
+        "Cue2Live Website": [
+            "Description": "Website to host Cue2Live family of software.",
+            "Time to Completion": "1 month", // Change to actual time interval type
+            "Skills Used": ["Django", "Python", "Javascript", "CSS", "HTML", "PostGreSQL", "nginx", "gunicorn", "bash"]
+        ]
+    ]
+    
+    var durations: [Double] {
+        projectDict.values.compactMap{ dict in
+            if let s = dict["Time to Completion"] as? String {
+                return parseDuration(s)
+            }
+            return nil
+        }
+    }
+
+    var maxDuration: Double {
+        durations.max() ?? 1
+    }
+        
+
+    func parseDuration(_ s: String) -> Double {
+        let comps = s.split(separator: " ")
+        if let first = comps.first, let value = Double(first) {
+            return value
+        }
+        return 0
+    }
+    
+
+        
+    var body: some View {
+        DisclosureGroup("Projects") {
+            LazyVStack {
+                ForEach(Array(projectDict), id: \.key) { key , value in
+                    let description: String? = value["Description"] as? String
+                    let length: String? = value["Time to Completion"] as? String
+                    let skills: [String]? = value["Skills Used"] as? [String]
+                    let durationValue = parseDuration(length ?? "")
+                    let normalized = durationValue / maxDuration
+                    projectCell(key: key, description: description ?? "", length: length ?? "", skills: skills ?? [], meterProgress: normalized)
+                }
+            }.padding([.top, .bottom], 5)
+        }
+    }
+}
+
+
+
+

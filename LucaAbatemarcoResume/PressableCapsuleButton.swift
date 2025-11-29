@@ -10,6 +10,7 @@ import SwiftUI
 
 struct PressableCapsuleStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
+    var selectionOpen: Bool = false
     
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -40,6 +41,7 @@ struct PressableCapsuleStyle: ButtonStyle {
 
 struct SmallPressableCapsuleStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
+    var selectionOpen: Bool = false
     
     func makeBody(configuration: Configuration) -> some View {
         configuration.label

@@ -43,29 +43,29 @@ struct ExperienceContent: View {
     var experience: String
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            if let header = experienceContent[experience]?["header"] as? String {
-                Text(header)
-                    .font(.system(size: 12))
-                    .foregroundColor(.primary)
-                    .padding(.bottom, 4)
-            }
-            
-            if let contentList = experienceContent[experience]?["content"] as? [String] {
-                VStack(alignment: .leading, spacing: 4) {
-                    ForEach(contentList, id: \.self) { bulletPoint in
-                        HStack(alignment: .top, spacing: 6) {
-                            Text("•")
-                                .bold()
-                            Text(bulletPoint)
-                                .font(.system(size: 10))
-                                .fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: 6) {
+                if let header = experienceContent[experience]?["header"] as? String {
+                    Text(header)
+                        .font(.system(size: 12))
+                        .foregroundColor(.primary)
+                        .padding(.bottom, 4)
+                }
+                
+                if let contentList = experienceContent[experience]?["content"] as? [String] {
+                    VStack(alignment: .leading, spacing: 4) {
+                        ForEach(contentList, id: \.self) { bulletPoint in
+                            HStack(alignment: .top, spacing: 6) {
+                                Text("•")
+                                    .bold()
+                                Text(bulletPoint)
+                                    .font(.system(size: 10))
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
                         }
                     }
                 }
             }
-        }
-        .padding(6)
+            .padding(6)
     }
 }
 
@@ -112,13 +112,20 @@ struct ExperienceTimeline: View {
                 let value = element.1
                 let position = experienceRole[key] ?? ""
                 
-                TimelineEntryView(
-                    key: key,
-                    position: position,
-                    start: value["start"] ?? nil,
-                    end: value["end"] ?? nil,
-                    isLast: index == sortedExperiences.count - 1
-                )
+                    TimelineEntryView(
+                        key: key,
+                        position: position,
+                        start: value["start"] ?? nil,
+                        end: value["end"] ?? nil,
+                        isLast: index == sortedExperiences.count - 1
+                    )
+                    .overlay(GeometryReader { proxy in
+                        let size = proxy.size
+                        ZStack {
+                            Color.clear
+                            BorderAnimation(points: borderPoints(for: size, inset: 6), canvasSize: size)
+                        }.allowsHitTesting(false)
+                    })
             }
         }
         .padding()
@@ -174,11 +181,11 @@ struct TimelineEntryView: View {
                 
                 if expanded {
                     ExperienceContent(experience: key)
-                        .transition(.opacity.combined(with: .move(edge: .top)))
+                        .transition(.opacity.combined(with: .blurReplace))
                 }
                 
                 Button(expanded ? "Hide Details" : "Details") {
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    withAnimation(expanded ? .spring(response: 0.6, dampingFraction: 0.9) : .spring(response: 0.5, dampingFraction: 0.6)) {
                         expanded.toggle()
                     }
                 }
