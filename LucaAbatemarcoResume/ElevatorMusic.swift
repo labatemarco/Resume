@@ -12,7 +12,7 @@ import SwiftUI
 
 class AudioVisualizer: ObservableObject {
     @Published var amplitude: Float = 0.0
-    @Published var volume: Float = 1.0  // 0 -> 1 max
+    @Published var volume: Float = 0.6  // 0 -> 1 max
     @Published var isMuted: Bool = false
     
     private var player: AVAudioPlayer?
@@ -39,7 +39,7 @@ class AudioVisualizer: ObservableObject {
             player?.isMeteringEnabled = true
             player?.numberOfLoops = -1  // LOOP FOREVER
             player?.volume = 1.0
-            self.volume = 1.0
+            self.volume = 0.6
             player?.prepareToPlay()
             player?.play()
             
