@@ -37,6 +37,7 @@ class AudioVisualizer: ObservableObject {
         do {
             player = try AVAudioPlayer(contentsOf: url)
             player?.isMeteringEnabled = true
+            player?.numberOfLoops = -1  // LOOP FOREVER
             player?.volume = 1.0
             self.volume = 1.0
             player?.prepareToPlay()
@@ -97,7 +98,7 @@ struct SmallAmplitudeVisualizer: View {
             }
         }
         .frame(height: 30)
-        .animation(.smooth(duration: 0.06), value: visualizer.visualAmplitude)
+        .animation(.smooth(duration: 0.20), value: visualizer.visualAmplitude)
     }
 }
 

@@ -19,9 +19,10 @@ struct Header: View {
                         .foregroundColor(.cyan).padding(5).frame(height: 20)
                     HStack {
                         SmallAmplitudeVisualizer(visualizer: song)
-                        ProfessionCarousel(myProfessions: ["Developer", "Audio Engineer", "Scientist"]).padding([.top], 5).frame(height: 5).baselineOffset(2)
+                        ProfessionCarousel(myProfessions: ["Developer", "Audio Engineer", "Scientist"]).frame(width: 110, height: 5, alignment: .leading).baselineOffset(5)
                     }
                 }
+                Spacer()
                 Link(destination: URL(string: "https://www.linkedin.com/in/luca-abatemarco/")!) {
                     Image("LI-In-Bug").resizable().frame(width: 35.27, height: 30)
                 }
@@ -37,24 +38,4 @@ struct Header: View {
     }
 }
 
-
-struct ProfessionCarousel: View {
-    
-    var myProfessions: [String]
-    let timer = Timer.publish(every: 2.0, on: .main, in: .common).autoconnect()
-    @State private var selectedProfessionIndex: Int = 0
-    var body: some View {
-        TabView(selection: $selectedProfessionIndex) {
-            ForEach(0..<myProfessions.count, id: \.self) {index in
-                ZStack(alignment: .topLeading) {
-                    Text(myProfessions[index]).font(.custom("Hiragino Sans", size: 12)).foregroundColor(.cyan)
-                }
-            }
-        }
-        .onReceive(timer) {_ in withAnimation(.default)
-            {selectedProfessionIndex = (selectedProfessionIndex + 1) % myProfessions.count}
-        }
-    }
-    
-}
 

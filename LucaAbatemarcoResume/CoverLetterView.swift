@@ -43,5 +43,6 @@ struct CoverLetterView: View {
             )
             
         }
+        .padding([.top], 10)
     }
 }
