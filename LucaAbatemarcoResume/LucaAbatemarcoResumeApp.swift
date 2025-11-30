@@ -13,6 +13,11 @@ struct LucaAbatemarcoResumeApp: App {
         WindowGroup {
             MasterView()
                 .frame(width: 400, height: 500)
-        }.windowResizability(.contentSize)
+                .onDisappear {
+                    NSApplication.shared.terminate(nil)
+                }
+        }
+        .windowResizability(.contentSize)
+        
     }
 }

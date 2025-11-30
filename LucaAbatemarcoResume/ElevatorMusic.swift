@@ -38,7 +38,7 @@ class AudioVisualizer: ObservableObject {
             player = try AVAudioPlayer(contentsOf: url)
             player?.isMeteringEnabled = true
             player?.numberOfLoops = -1  // LOOP FOREVER
-            player?.volume = 1.0
+            player?.volume = 0.6
             self.volume = 0.6
             player?.prepareToPlay()
             player?.play()
